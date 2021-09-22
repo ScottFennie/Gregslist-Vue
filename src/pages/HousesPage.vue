@@ -1,12 +1,43 @@
 <template>
-  <div>
-    hello from houzzez
+  <div class="container-fluid px-0">
+    <div class="row py-2 bg-dark mb-4 top-bar">
+      <div class="col-12 text-end">
+        <button class="btn text-success lighten-30 selectable" data-bs-toggle="modal" data-bs-target="#house-form">
+          Add a Listing
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <!-- REVIEW PROPS -->
+      <House v-for="house in houses" :key="house.id" :house="house" class="col-lg-3" />
+    </div>
+
+    <Modal id="house-form">
+      <template #modal-title>
+        Add your House
+      </template>
+      <template #modal-body>
+        <HouseForm />
+      </template>
+    </Modal>
   </div>
 </template>
 
 <script>
-export default {
+import { computed, onMounted } from '@vue/runtime-core'
+import { AppState } from '../AppState.js'
+import { housesService } from '../services/HousesService.js'
 
+export default {
+  setup() {
+    onMounted(async() => {
+      await housesService.getHouses()
+    })
+
+    return {
+      houses: computed(() => AppState.houses)
+    }
+  }
 }
 </script>
 
